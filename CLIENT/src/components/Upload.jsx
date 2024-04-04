@@ -10,8 +10,6 @@ ring.register()
 // Default values shown
 
 
-
-
 function Upload() {
   // STATES
   const [selectedImage, setSelectedImage] = useState();
@@ -20,11 +18,14 @@ function Upload() {
     pan_no: "",
     father_name: "",
     name: "",
-    dob: "",
+    dob: "06-04-2024'",
   });
 
+  const [tmp, setTmp] = useState(0);
+
   useEffect(() => {
-    if (selectedImage) {
+    if (selectedImage && tmp < 1) {
+      setTmp(1);
       const blob = dataURItoBlob(selectedImage);
       const formData = new FormData();
       formData.append("imageFile", blob, "image.jpg");
@@ -68,6 +69,30 @@ function Upload() {
     });
   };
 
+  const handleSubmit = () => {
+
+
+    if (data.pan_no && data.father_name && data.name && data.dob) {
+      fetch("/store_form_data", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then((response) => {
+        console.log(response);
+      }).catch(error => console.error('Error:', error));
+
+
+
+
+
+
+    } else {
+      console.log("Not Allowed")
+    }
+  }
+
   return (
     <div className="hero container">
       <div className="m-5">
@@ -103,12 +128,12 @@ function Upload() {
 
             {selectedImage && (
               <div>
-                <label htmlFor="file-upload" className="mt-2 btn btn-secondary">
+                <label htmlFor="file-upload" className="mt-2 btn btn-secondary m-auto">
                   Upload File{" "}
                 </label>
                 <input
-                  id="file-upload"
                   type="file"
+                  id="file-upload"
                   accept=".png, .jpg, .jpeg"
                   onChange={handleImageChange}
                 />
@@ -177,6 +202,17 @@ function Upload() {
                   ></input>
                 </div>
               </div>
+
+              <div className="row m-2">
+                <div className="col-6 d-flex justify-content-end">
+                  <input type="button" value="Store Data" onClick={handleSubmit} />
+                </div>
+                <div className="col-6 d-flex justify-content-start">
+                  {/* TEMP */}
+                </div>
+              </div>
+
+
             </form>
           </div>
         </div>

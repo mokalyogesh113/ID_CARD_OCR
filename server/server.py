@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import io
@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 
 import pan_ocr as po
+import sql_crud as crud
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +30,19 @@ def get_pan_data():
         return data
 
     return {"name" : "Yogesh Mokal"}
+
+@app.route("/store_form_data",methods=['GET', 'POST'])
+def store_form_data():
+    if request.is_json:
+        data = request.get_json()
+        
+        crud.insert(data)
+
+
+
+        return jsonify(success=True), 200
+    
+    return jsonify(error='Data was not in JSON format'), 400 
 
 
 if __name__ == '__main__':
