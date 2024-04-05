@@ -6,6 +6,10 @@ start = time.time()
 import numpy as np
 from imageio.v2 import imread
 
+
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
 def get_pan_data(img_path):
   reader = easyocr.Reader(['en', 'hi'])
   result = reader.readtext(img_path,paragraph=False, decoder = "beamsearch")
@@ -119,20 +123,20 @@ def get_pan_data(img_path):
     # ###########################################
   return extract_pan_data(str)
 
+
+
 def read_image(img_path):
     return imread(img_path)
 
-
-
 def main():
-  data = get_pan_data(read_image('./new.png'))
+  data = get_pan_data(read_image('new.png'))
   print("The data is :- ",data)
 
   # data = get_pan_data("pan-2.png")
   # print("The data is :- ",data)
 
   # data = get_pan_data("pan-3.png")
-  # print("The data is :- ",data)
+  # print("The data is :- ",data) 
 
   # data = get_pan_data("pan-4.png")
   # print("The data is :- ",data)

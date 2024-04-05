@@ -1,0 +1,9 @@
+.tableDiv{
+    margin-top: 30px;
+    margin-bottom: 30px
+}
+
+.tableDiv table,th,td{
+    border: 1px solid;
+    padding: 5px ;
+}

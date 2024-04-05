@@ -18,14 +18,12 @@ function Upload() {
     pan_no: "",
     father_name: "",
     name: "",
-    dob: "06-04-2024'",
+    dob: "06-04-2024",
   });
 
-  const [tmp, setTmp] = useState(0);
 
   useEffect(() => {
-    if (selectedImage && tmp < 1) {
-      setTmp(1);
+    if (selectedImage) {
       const blob = dataURItoBlob(selectedImage);
       const formData = new FormData();
       formData.append("imageFile", blob, "image.jpg");
@@ -81,6 +79,7 @@ function Upload() {
         body: JSON.stringify(data)
       }).then((response) => {
         console.log(response);
+        alert("Data Stored To databse");
       }).catch(error => console.error('Error:', error));
 
 
