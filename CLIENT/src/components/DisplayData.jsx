@@ -7,9 +7,8 @@ function DisplayData() {
 
     const [data, setData] = useState(null);
 
-
     const handleFetch = () => {
-        fetch("/get_pan_data_db", {
+        fetch("http://localhost:5005/pan/get_all_data", {
             method: "GET",
         }).then((res) => res.json()).then((data) => {
             setData(data);
@@ -20,10 +19,9 @@ function DisplayData() {
         });
     }
 
-
     return (
         <div className="container d-flex flex-column align-items-center">
-            <input type="button" value="Fetch Data" onClick={handleFetch} />
+            <input type="button" value="Fetch PAN Data" onClick={handleFetch} />
 
             {data &&
 
@@ -64,18 +62,3 @@ function DisplayData() {
 }
 
 export default DisplayData;
-
-
-/*
-<tbody>
-    {data.map((item) => (
-        <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.name}</td>
-            <td>{item.pan_no}</td>
-            <td>{item.dob}</td>
-            <td>{item.father_name}</td>
-        </tr>
-    ))}
-
-    */

@@ -1,0 +1,6 @@
+pan_no
+aadhar_no
+name
+father_name
+gender
+dob

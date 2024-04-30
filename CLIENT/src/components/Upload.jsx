@@ -10,10 +10,12 @@ ring.register()
 // Default values shown
 
 
-function Upload() {
+function Upload({flag}) {
+
   // STATES
   const [selectedImage, setSelectedImage] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [aadharFlag, setAadharFlag] = useState(false);
   const [data, setData] = useState({
     pan_no: "",
     father_name: "",
@@ -22,7 +24,14 @@ function Upload() {
   });
 
 
+  // USE EFFECT 
   useEffect(() => {
+    handleImageUpload();
+  }, [selectedImage]);
+
+  // HANDLERS
+
+  const handleImageUpload = () =>{
     if (selectedImage) {
       const blob = dataURItoBlob(selectedImage);
       const formData = new FormData();
@@ -30,7 +39,14 @@ function Upload() {
 
       setIsLoading(true);
 
-      fetch("/get_pan_data", {
+      let url = ""
+      if (flag == 1) {
+        url = "http://localhost:5005/aadhar/extract_data";
+      } else {
+        url = "http://localhost:5005/pan/extract_data";
+      }
+
+      fetch(url, {
         method: "POST",
         body: formData,
       })
@@ -47,7 +63,9 @@ function Upload() {
           setIsLoading(false);
         });
     }
-  }, [selectedImage]);
+  }
+
+
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -68,10 +86,8 @@ function Upload() {
   };
 
   const handleSubmit = () => {
-
-
     if (data.pan_no && data.father_name && data.name && data.dob) {
-      fetch("/store_form_data", {
+      fetch("/pan/store_data", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -81,12 +97,6 @@ function Upload() {
         console.log(response);
         alert("Data Stored To databse");
       }).catch(error => console.error('Error:', error));
-
-
-
-
-
-
     } else {
       console.log("Not Allowed")
     }
@@ -95,7 +105,6 @@ function Upload() {
   return (
     <div className="hero container">
       <div className="m-5">
-
         {isLoading &&
           <div className="loading">
             <l-ring
@@ -104,7 +113,7 @@ function Upload() {
               bg-opacity="0"
               speed="2"
               color="black"
-            ></l-ring>
+              ></l-ring>
           </div>
         }
 
@@ -121,43 +130,68 @@ function Upload() {
                   type="file"
                   accept=".png, .jpg, .jpeg"
                   onChange={handleImageChange}
-                />
+                  />
               </div>
             )}
 
             {selectedImage && (
               <div>
-                <label htmlFor="file-upload" className="mt-2 btn btn-secondary m-auto">
+                <label htmlFor="file-upload" className="m-2 btn btn-secondary ">
                   Upload File{" "}
                 </label>
+                <input type="button" value="Fetch Data again" onClick={handleImageUpload} className="m-2 btn btn-secondary "/>
                 <input
                   type="file"
                   id="file-upload"
                   accept=".png, .jpg, .jpeg"
                   onChange={handleImageChange}
-                />
+                  />
                 <img id="pan-img" src={selectedImage} alt="No File Found" />
               </div>
             )}
+
+
+            
           </div>
 
           <div className="col">
             <form action="">
-              <div className="row m-2">
-                <div className="col-6 d-flex justify-content-end">
-                  <label htmlFor="pan-id">Permanant Account Number:- </label>
-                </div>
-                <div className="col-6 d-flex justify-content-start">
-                  <input
-                    type="text"
-                    name="pan_no"
-                    placeholder="Permanant Account Number"
-                    value={data.pan_no}
-                    onChange={handleChange}
-                  ></input>
-                </div>
-              </div>
 
+              {/*PAN Number*/}
+              {flag == 2 &&
+                (<div className="row m-2">
+                  <div className="col-6 d-flex justify-content-end">
+                    <label htmlFor="pan-id">Permanant Account Number:- </label>
+                  </div>
+                  <div className="col-6 d-flex justify-content-start">
+                    <input
+                      type="text"
+                      name="pan_no"
+                      placeholder="Permanant Account Number"
+                      value={data.pan_no}
+                      onChange={handleChange}
+                      ></input>
+                  </div>
+                </div>)}
+
+              {/*AADHAR Number*/}
+              {flag == 1 &&
+                (<div className="row m-2">
+                  <div className="col-6 d-flex justify-content-end">
+                    <label htmlFor="pan-id">UIDAI Number:- </label>
+                  </div>
+                  <div className="col-6 d-flex justify-content-start">
+                    <input
+                      type="text"
+                      name="aadhar_no"
+                      placeholder="UIDAI"
+                      value={data.aadhar_no}
+                      onChange={handleChange}
+                      ></input>
+                  </div>
+                </div>)}
+
+              {/*NAME*/}
               <div className="row m-2">
                 <div className="col-6 d-flex justify-content-end">
                   <label htmlFor="pan-name">Name :- </label>
@@ -169,25 +203,45 @@ function Upload() {
                     placeholder="Full Name"
                     value={data.name}
                     onChange={handleChange}
-                  ></input>
+                    ></input>
                 </div>
               </div>
 
-              <div className="row m-2">
-                <div className="col-6 d-flex justify-content-end">
-                  <label htmlFor="pan-f-name">Father's Name :- </label>
-                </div>
-                <div className="col-6 d-flex justify-content-start">
-                  <input
-                    type="text"
-                    name="father_name"
-                    placeholder="Father's Name"
-                    value={data.father_name}
-                    onChange={handleChange}
-                  ></input>
-                </div>
-              </div>
+              {/*FATHER'S NAME*/}
+              {flag == 2 &&
+                (<div className="row m-2">
+                  <div className="col-6 d-flex justify-content-end">
+                    <label htmlFor="pan-f-name">Father's Name :- </label>
+                  </div>
+                  <div className="col-6 d-flex justify-content-start">
+                    <input
+                      type="text"
+                      name="father_name"
+                      placeholder="Father's Name"
+                      value={data.father_name}
+                      onChange={handleChange}
+                      ></input>
+                  </div>
+                </div>)}
 
+              {/*GENDER*/}
+              {flag == 1 &&
+                (<div className="row m-2">
+                  <div className="col-6 d-flex justify-content-end">
+                    <label htmlFor="pan-f-name">Gender :- </label>
+                  </div>
+                  <div className="col-6 d-flex justify-content-start">
+                    <input
+                      type="text"
+                      name="gender"
+                      placeholder="Male / Female "
+                      value={data.gender}
+                      onChange={handleChange}
+                      ></input>
+                  </div>
+                </div>)}
+
+              {/*DATE OF BIRTH*/}
               <div className="row m-2">
                 <div className="col-6 d-flex justify-content-end">
                   <label htmlFor="pan-dob">Date of Birth :- </label>
@@ -198,7 +252,7 @@ function Upload() {
                     name="dob"
                     value={convertDate(data.dob)}
                     onChange={handleChange}
-                  ></input>
+                    ></input>
                 </div>
               </div>
 

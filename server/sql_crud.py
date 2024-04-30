@@ -7,12 +7,10 @@ mydb = mysql.connector.connect(
 host="localhost",
 port = 3306,
 user="root",
-password="Netwin@123",
+password="root",
 database="ycm_db" ,
 charset='utf8'
 )
-
-
 
 def insert_pan_data(data):
     try:
@@ -46,7 +44,6 @@ def insert_pan_data(data):
 
 def get_pan_data(id=None):
     try:
-        
         # Create a cursor object
         mycursor = mydb.cursor(dictionary=True)
 
@@ -66,6 +63,7 @@ def get_pan_data(id=None):
         mycursor.close()
 
         # Return the result in JSON format
+        print(rows)
         return jsonify(rows)
 
     except mysql.connector.Error as err:
@@ -77,13 +75,8 @@ def get_pan_data(id=None):
 
 if __name__ == '__main__':
     print(mydb)
-    insert_pan_data('1')
-
-
-
-
-
-
+    get_pan_data()
+    # insert_pan_data('1')
 
 '''
 pip install mysql-connector-python
