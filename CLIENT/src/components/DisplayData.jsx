@@ -3,18 +3,18 @@ import { useState, useEffect } from 'react';
 import './css/DisplayData.css'
 
 
-function DisplayData() {
+function DisplayData({url}) {
 
     const [data, setData] = useState(null);
     const [titles, setTitles] = useState(null);
     const [sectionTitle, setSectionTitle] = useState(null);
 
     const handleFetch = (flag) => {
-        let url = "";
-        if (flag == 1)      url = "http://localhost:5005/aadhar/get_all_data";
-        else                url = "http://localhost:5005/pan/get_all_data";
+        let fetchURL = "";
+        if (flag == 1)      fetchURL = url + "/aadhar/get_all_data";
+        else                fetchURL = url + "/pan/get_all_data";
 
-        fetch(url, {
+        fetch(fetchURL, {
             method: "GET",
         }).then((res) => res.json()).then((data) => {
             setData(data);

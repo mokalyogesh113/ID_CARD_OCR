@@ -4,7 +4,7 @@ import Upload from '../components/Upload';
 import DisplayData from '../components/DisplayData'
 import { useState } from 'react';
 
-function HomePage() {
+function HomePage({url}) {
   const [flag, setFlag] = useState(1);
 
   const updateDisplay = (n) => {
@@ -31,8 +31,8 @@ function HomePage() {
       </div>
     </div>
 
-    <Upload flag={flag}></Upload>
-    <DisplayData flag={flag}></DisplayData>
+    <Upload flag={flag} url={url}></Upload>
+    <DisplayData flag={flag} url={url}></DisplayData>
     </>
   )
 }

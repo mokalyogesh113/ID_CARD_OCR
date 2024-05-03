@@ -10,7 +10,7 @@ ring.register()
 // Default values shown
 
 
-function Upload({flag}) {
+function Upload({flag, url}) {
 
   // STATES
   const [selectedImage, setSelectedImage] = useState();
@@ -43,14 +43,14 @@ function Upload({flag}) {
 
       setIsLoading(true);
 
-      let url = ""
+      let fetchURL = ""
       if (flag == 1) {
-        url = "http://localhost:5005/aadhar/extract_data";
+        fetchURL = url + "/aadhar/extract_data";
       } else {
-        url = "http://localhost:5005/pan/extract_data";
+        fetchURL = url + "/pan/extract_data";
       }
 
-      fetch(url, {
+      fetch(fetchURL, {
         method: "POST",
         body: formData,
       })
