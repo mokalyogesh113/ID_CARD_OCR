@@ -20,8 +20,12 @@ function Upload({flag}) {
     pan_no: "",
     father_name: "",
     name: "",
-    dob: "06-04-2024",
+    dob: "",
   });
+
+  useEffect(() => {
+    console.log(data);
+  }, [data])
 
 
   // USE EFFECT 
@@ -31,7 +35,7 @@ function Upload({flag}) {
 
   // HANDLERS
 
-  const handleImageUpload = () =>{
+  const handleImageUpload = () => {
     if (selectedImage) {
       const blob = dataURItoBlob(selectedImage);
       const formData = new FormData();
@@ -51,8 +55,12 @@ function Upload({flag}) {
         body: formData,
       })
         .then((res) => res.json())
-        .then((data) => {
-          setData(data);
+        .then((in_data) => {
+          // setData(in_data);
+          setData({
+            ...in_data,
+            dob: convertDate(in_data.dob)
+          });
           console.log(data);
           setIsLoading(false);
         })
@@ -64,8 +72,6 @@ function Upload({flag}) {
         });
     }
   }
-
-
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -86,19 +92,39 @@ function Upload({flag}) {
   };
 
   const handleSubmit = () => {
-    if (data.pan_no && data.father_name && data.name && data.dob) {
-      fetch("/pan/store_data", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }).then((response) => {
-        console.log(response);
-        alert("Data Stored To databse");
-      }).catch(error => console.error('Error:', error));
-    } else {
-      console.log("Not Allowed")
+    if (flag == 2) {
+      if (data.pan_no && data.father_name && data.name && data.dob) {
+        fetch("/pan/store_data", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then((response) => {
+          console.log(response);
+          alert("Data Stored To databse");
+        }).catch(error => console.error('Error:', error));
+      } else {
+        console.log("Not Allowed")
+      }
+    }
+    else if (flag == 1) {
+      console.log(data);
+      if (data.aadhar_no && data.name && data.gender && data.dob) {
+        // if(data){
+        fetch("/aadhar/store_data", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then((response) => {
+          console.log(response);
+          alert("Data Stored To databse");
+        }).catch(error => console.error('Error:', error));
+      } else {
+        console.log("Not Allowed")
+      }
     }
   }
 
@@ -139,7 +165,7 @@ function Upload({flag}) {
                 <label htmlFor="file-upload" className="m-2 btn btn-secondary ">
                   Upload File{" "}
                 </label>
-                <input type="button" value="Fetch Data again" onClick={handleImageUpload} className="m-2 btn btn-secondary "/>
+                <input type="button" value="Fetch Data again" onClick={handleImageUpload} className="m-2 btn btn-secondary " />
                 <input
                   type="file"
                   id="file-upload"
@@ -151,7 +177,7 @@ function Upload({flag}) {
             )}
 
 
-            
+
           </div>
 
           <div className="col">
@@ -250,7 +276,9 @@ function Upload({flag}) {
                   <input
                     type="date"
                     name="dob"
-                    value={convertDate(data.dob)}
+                    // data-date-format="DD/MM/YYYY"
+                    pattern="\d{2}/\d{2}/\d{4}"
+                    value={data.dob}
                     onChange={handleChange}
                     ></input>
                 </div>

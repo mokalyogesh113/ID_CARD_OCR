@@ -6,7 +6,7 @@ from flask import jsonify
 mydb = mysql.connector.connect(
 host="localhost",
 port = 3306,
-user="root",
+user="root", 
 password="root",
 database="ycm_db" ,
 charset='utf8'
@@ -71,6 +71,67 @@ def get_pan_data(id=None):
         return jsonify({"error": "Failed to fetch data"})
 
 
+
+
+
+
+def insert_aadhar_data(data):
+    try:
+        # Create a cursor object
+        mycursor = mydb.cursor()
+
+        # Initialize variables
+        aadhar_no = data.get('aadhar_no', '')
+        name = data.get('name', '')
+        gender = data.get('gender', '')
+        dob = data.get('dob', '')
+
+        # Execute the insert query
+        insert_query = "INSERT INTO aadhar_data (aadhar_no, name, gender, dob) VALUES (%s, %s, %s, %s)"
+        mycursor.execute(insert_query, (aadhar_no, name, gender, dob))
+
+        # Commit the transaction
+        mydb.commit()
+
+        print("Data inserted successfully")
+        return True
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return False
+
+    finally:
+        if mycursor:
+            mycursor.close()
+
+
+def get_aadhar_data(id=None):
+    try:
+        # Create a cursor object
+        mycursor = mydb.cursor(dictionary=True)
+
+        if id is not None:
+            # Query to retrieve data for a specific ID
+            query = "SELECT * FROM aadhar_data WHERE id = %s"
+            mycursor.execute(query, (id,))
+        else:
+            # Query to retrieve all data
+            query = "SELECT * FROM aadhar_data"
+            mycursor.execute(query)
+
+        # Fetch all rows
+        rows = mycursor.fetchall()
+
+        # Close cursor and database connection
+        mycursor.close()
+
+        # Return the result in JSON format
+        print(rows)
+        return jsonify(rows)
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return jsonify({"error": "Failed to fetch data"})
 
 
 if __name__ == '__main__':

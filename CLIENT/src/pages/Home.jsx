@@ -18,10 +18,19 @@ function HomePage() {
   return (
     <>
     <Nav flag={flag}></Nav>
-    <div className="container d-flex justify-content-center">
-      <input type='button' value='Aadhar' onClick={() => setFlag(1)} className="btn btn-link m-2"/>
-      <input type='button' value='Pan' onClick={() => setFlag(2)} className="btn btn-link m-2"/>
+    
+
+    <div className="form-group d-flex justify-content-center">
+    <div className="form-check form-check-inline">
+        <input className="form-check-input" type="radio" name="id_type" id="aadhar" value="AADHAR" defaultChecked  onChange={() => setFlag(1)}/>
+        <label className="form-check-label" htmlFor="aadhar">AADHAR</label>
+      </div>
+      <div className="form-check form-check-inline">
+        <input className="form-check-input" type="radio" name="id_type" id="pan" value="PAN" onChange={() => setFlag(2)}/>
+        <label className="form-check-label" htmlFor="pan">PAN</label>
+      </div>
     </div>
+
     <Upload flag={flag}></Upload>
     <DisplayData flag={flag}></DisplayData>
     </>

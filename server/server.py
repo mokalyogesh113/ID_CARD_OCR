@@ -56,6 +56,26 @@ def aadhar_extract_data():
         return data
     return {"Error" : "Only POST METHODS ARE ALLOWED"}
 
+@app.route("/aadhar/store_data",methods=['GET', 'POST'])
+def aadhar_store_data():
+    if request.is_json:
+        data = request.get_json()
+        flag = crud.insert_aadhar_data(data)
+        return jsonify(sucess=flag) , 200
+    return jsonify(error='Data was not in JSON format'), 400
+
+@app.route('/aadhar/get_all_data', methods=['GET', 'POST'])
+def aadhar_get_all_data():  
+    id = ""
+    if request.method == 'GET':
+        id = request.args.get('id')
+    elif request.method == 'POST':
+        id = request.get_json().get('id')        
+    if(id):
+        return crud.get_aadhar_data(id)
+    return crud.get_aadhar_data()
+
+
 
 
 if __name__ == '__main__': 
